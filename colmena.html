@@ -30,6 +30,18 @@
         text-align: left;
         /* transform: translateY(-50%) */
     }
+    #imgCont{
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+    .imgCont {position: absolute;width: 150px;height: 150px;
+ }
+    .notvisible { visibility: hidden;}
+    .visible { visibility: visible;}
 
     svg {
         stroke: yellow;
@@ -59,12 +71,20 @@
         <div class="d2" style="background: transparent;">
             <p class="year" >Año 2021</p></div>
 
-    <div id="noleaf" class="d1"><p class="cimarrona">LA <br> COLMENA <br> &nbsp CIMARRONA</p></div>
+    <div id="noleaf" class="d1"><p id='pcimarrona' class="cimarrona">LA <br> COLMENA <br> &nbsp CIMARRONA</p>
+        <div id="imgCont">
+            <img id='papayaImg' class='imgCont papaya visible' src="./png/papaya.png" alt="">
+            <img id='batataImg' class='imgCont batata visible' src="./png/sweetpotato.png" alt="">
+            </div>
+    </div>
     <div id="d2022" class="hexa d3"></div>
     <div id="d2021" class="hexa d2"></div>
     <div id="d2019" class="hexa d0"></div>
 </div>
+<script src="./geojson/batata.js"></script>
+<script src="./geojson/papaya.js"></script>
 <script>
+    
 var losDivs = document.getElementById('elDiv').getElementsByClassName('hexa')    
 for (var i= 0; i < losDivs.length; i++) {
     hexSVG.make(losDivs[i].id)
@@ -77,6 +97,114 @@ L.tileLayer(daTile, {
 }
 hexSVG.joinAllLeafDiv()
 hexSVG.make('noleaf')
+
+
+
+
+
+function style(feature) {
+    return {
+        weight: 10,
+        opacity: 0,
+        color: 'white',
+        // dashArray: '3',
+        fillOpacity: 0,
+        fillColor: 'none'
+    };
+}
+
+function highlightFeature(e) {
+    // miEvt = e
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        opacity: .7,
+        dashArray: '',
+        fillOpacity: 0.7,
+        fillColor:'yellow'
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+    }
+
+    // info.update(layer.feature.properties);
+}
+
+var geojson;
+
+function resetHighlight(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        opacity: 0,
+        fillOpacity: 0,
+        fillColor:'none'
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+    }
+    // geojson.resetStyle(e.target);
+    // info.update();
+}
+
+// function zoomToFeature(e) {
+//     map.fitBounds(e.target.getBounds());
+// }
+var map = hexSVG.leafMaps[0]
+
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        // click: zoomToFeature
+    });
+}
+
+batataMap = L.geoJson(batata, {
+    style: style,
+    onEachFeature: onEachFeature
+}).addTo(map);
+
+papayaMap = L.geoJson(papaya, {
+    style: style,
+    onEachFeature: onEachFeature
+}).addTo(map);
+
+batataMap.on("click", markerOnClick)
+batataMap.on("mouseover", markerOnClick)
+batataMap.on("mouseout", markerOffClick)
+papayaMap.on("mouseout", markerOffClick)
+papayaMap.on("click", markerOnClickPapaya)
+papayaMap.on("mouseover", markerOnClickPapaya)
+
+function markerOnClick() {
+    document.getElementById('batataImg').style.visibility = 'visible'
+    document.getElementById('pcimarrona').style.visibility = 'hidden'
+
+    };
+function markerOnClickPapaya() {
+    document.getElementById('pcimarrona').style.visibility = 'hidden'
+
+    document.getElementById('papayaImg').style.visibility = 'visible'
+    };
+
+function markerOffClick() {
+    document.getElementById('papayaImg').style.visibility = 'hidden'
+    document.getElementById('batataImg').style.visibility = 'hidden'
+    document.getElementById('pcimarrona').style.visibility = 'visible'
+
+   };
+
+function changeImage(){
+
+}
+
+var papayaSource = './png/papaya.png'
+var batataSource = './png/batata.png'
 
 </script>
 </body>

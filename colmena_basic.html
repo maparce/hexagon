@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+   integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+   crossorigin=""/>
+</head>
+<style>
+    #elDiv {
+        width: 550px;
+        height: 480px;
+        /* position: absolute; */
+        /* z-index: 999; */
+    }
+    div.hexa {width: 200px;height: 200px; }
+    #noleaf {width: 200px;height: 200px;text-align: center;vertical-align: middle;}
+    div.d0 {background: red; position:absolute; left:20px; top:170px}
+    div.d1 {background:RGB(180, 130, 45);position:absolute;left:180px; top:260px}
+    div.d2 {background: orange;position:absolute;left:180px; top:80px}
+    div.d3 {background: green;position:absolute;left:340px;top:170px}
+    div#elDiv{background:RGB(243,224,176);}
+    p.cimarrona {position: relative;
+        top: 20%; 
+        left:12%;
+        font-size: 23px;
+        text-align: left;
+        /* transform: translateY(-50%) */
+    }
+
+    svg {
+        stroke: yellow;
+        /* z-index: 0; */
+        position: absolute;
+    }
+  .year{
+    font-size: 30px;
+    position: absolute;
+    left: 75px;
+    top:-85px;
+  }
+</style>
+<body>
+     <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+ integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+ crossorigin=""></script>
+<script src="./js/hexagonMaskLeafletEach.js"></script>
+    <script src="./js/L.Map.Sync-min.js"></script>
+
+<div id="elDiv">
+    <div class="d0" style="background: transparent;">
+        <p class="year" >Año 2019</p></div>
+    <div class="d3" style="background: transparent;">
+        <p class="year" >Año 2022</p></div>
+        <div class="d2" style="background: transparent;">
+            <p class="year" >Año 2021</p></div>
+
+    <div id="noleaf" class="d1"><p class="cimarrona">LA <br> COLMENA <br> &nbsp CIMARRONA</p></div>
+    <div id="d2022" class="hexa d3"></div>
+    <div id="d2021" class="hexa d2"></div>
+    <div id="d2019" class="hexa d0"></div>
+</div>
+<script>
+var losDivs = document.getElementById('elDiv').getElementsByClassName('hexa')    
+for (var i= 0; i < losDivs.length; i++) {
+    hexSVG.make(losDivs[i].id)
+    hexSVG.leafMaps[i] = L.map(losDivs[i].id,{zoomControl: false , attributionControl: false,}).setView([18.11561767394782, -65.44546544551851],19);
+    const daTile = hexSVG.leafTiles[i]
+L.tileLayer(daTile, {
+    maxZoom: 22,
+    minZoom: 18,
+}).addTo(hexSVG.leafMaps[i]);
+}
+hexSVG.joinAllLeafDiv()
+hexSVG.make('noleaf')
+
+</script>
+</body>
+</html>
